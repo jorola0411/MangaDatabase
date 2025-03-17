@@ -1,17 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown,faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
 
     const [openGenre, setOpenGenre] = useState(false);
     const [openAuthor, setOpenAuthor] = useState(false);
-    return (
+    const [manga, setMangas] = useState([]);
 
+    const fetchManga = () => {
+        fetch("http://localhost:3000/manga")
+            .then(res => res.json())
+            .then((jsonData) => {
+                console.log(manga)
+                setMangas(jsonData);
+            })
+    }
+
+    useEffect(() => {
+
+        fetchManga();
+
+    }, []);
+
+    return (
         <>
             <header className="bg-gray-800 text-white p-4 flex flex-col md:flex-row md:justify-center items-center"> Jao's Manga</header>
+            
             <container className="grid grid-cols-4 min-h-screen pt-10">
+
                 <filter className="col-span-1">
                     <h1 className="text-center text-5xl pb-10">Filter</h1>
                     <div className="border-b pb-2 max-w-[50%]">
@@ -43,17 +60,28 @@ export default function Home() {
                             </div>
                         )}
                     </div>
-
-
-                    
-
                 </filter>
 
-                <list className="col-span-3">
-                    <p className="text-left">Manga</p>
-                </list>
+
+                {manga.map(manga => {
+                    return (
+                        <>
+                            <div key={manga.id}>
+                                <list className="col-span-3">
+                                <p className="text-left">Manga</p>
+                                    <img src={`http://localhost:3000/images/${manga.image_name}`} />
+                                    <h4>{manga.name}</h4>
+                                    <p>{manga.author}</p>
+                                    <p>{manga.genre}</p>
+                                </list>
+                            </div>
+                        </>
+                    )
+                })
+                }
             </container>
-            <footer className="text-center">Copyright 2025</footer>
+
+            <footer className="bg-gray-800 text-white p-4 flex flex-col md:flex-row md:justify-center items-center text-center">Copyright 2025</footer>
         </>
     )
 }

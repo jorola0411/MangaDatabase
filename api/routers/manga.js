@@ -6,7 +6,7 @@ const db = require('../db');
 mangaRouter.get("/", (req, res) => {
 
     const sql = `
-    SELECT manga.*, authors.name AS author, authors_id AS author_id
+    SELECT manga.*, authors.name AS author, manga.author_id AS author_id
     FROM manga
     JOIN authors ON manga.author_id=authors.id
     `;
