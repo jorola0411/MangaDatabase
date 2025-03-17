@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
 
-const mangadb = mysql.createConnection({
+const db = mysql.createConnection({
     user: "root",
     password: 'root',
     database: "manga",
@@ -18,4 +18,4 @@ db.connect( (error) => {
     console.log("Database connected");
   
   });
-module.exports = mangadb;
+module.exports = db;
