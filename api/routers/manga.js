@@ -4,13 +4,34 @@ const upload = require('../storage');
 const db = require('../db');
 
 mangaRouter.get("/", (req, res) => {
+    const authorFilters = req.query.authors; 
+    const genreFilters = req.query.genres;
 
-    const sql = `
-    SELECT manga.*, authors.name AS author, manga.author_id AS author_id
+    let sql = `
+    SELECT manga.*, authors.name AS author, manga.author_id AS author_id, genres.name AS genre, manga.genre_id = genres.id
     FROM manga
     JOIN authors ON manga.author_id=authors.id
+    JOIN genres ON manga.genre_id = genres.id
     `;
-    db.query(sql, (error, results) => {
+    const conditions = [];
+    const queryParams = [];
+
+    if (authorFilters) {
+        const authors = Array.isArray(authorFilters) ? authorFilters : [authorFilters];
+        conditions.push(`manga.author_id IN (${authors.map(() => '?').join(',')})`);
+        queryParams.push(...authors);
+      }
+    
+      if (genreFilters) {
+        const genres = Array.isArray(genreFilters) ? genreFilters : [genreFilters];
+        conditions.push(`manga.genre_id IN (${genres.map(() => '?').join(',')})`);
+        queryParams.push(...genres);
+      }
+      if (conditions.length > 0) {
+        sql += ' WHERE ' + conditions.join(' AND ');
+      }
+
+    db.query(sql, queryParams, (error, results) => {
         if (error) {
             res.status(500).send(error);
             return;
@@ -41,9 +62,9 @@ mangaRouter.get('/:id', (req, res) => {
     });
 });
 
-mangaRouter.post('/', upload.single('image'), (req, res) =>{
+mangaRouter.post('/', upload.single('image'), (req, res) => {
 
-    const {author, title, genre} = req.body;
+    const { author, title, genre } = req.body;
 
     const image = req.file.filename;
 
@@ -55,25 +76,24 @@ mangaRouter.post('/', upload.single('image'), (req, res) =>{
             console.error(error);
             return res.status(500).send('An error occurred');
         }
-        
+
         res.status(200).json({ message: 'Manga added.' });
-        });
     });
+});
 
 mangaRouter.put("/:id", upload.single("image"), (req, res) => {
 
-    const {id} = req.params;
+    const { id } = req.params;
 
     const { author_id, title, genre } = req.body;
 
-    let updateMangaSQL = 
+    let updateMangaSQL =
     `UPDATE manga
-    SET name = ?, genre = ? , author_id ? `;
+    SET name = ?, genre = ? , author_id = ? `;
 
     const queryParams = [author_id, title, genre];
 
-    if(req.file){
-
+    if (req.file) {
         updateMangaSQL += `, image_name = ? `;
         queryParams.push(req.file.filename);
     }
@@ -83,14 +103,33 @@ mangaRouter.put("/:id", upload.single("image"), (req, res) => {
 
     db.query(updateMangaSQL, queryParams, (error, results) => {
 
-        if(error) {
-			console.log(error);
-			return res.status(500).send("Internal Server Error");
-		}
+        if (error) {
+            console.log(error);
+            return res.status(500).send("Internal Server Error");
+        }
 
-		res.json({message: "Manga updated."});
+        res.json({ message: "Manga updated." });
     });
 });
+
+mangaRouter.delete("/:id", (req, res) => {
+
+    const id = req.params.id;
+    const sql = `DELETE FROM manga WHERE id = ? LIMIT 1`
+
+    db.query(sql, [id], (error, results) => {
+
+        if(error) {
+          console.log(error); 
+          res.status(500).send("Interal Server Error");
+        }
+    
+        res.json({message: "Manga Deleted"});
+    
+      });
+    
+    });
+
 
 mangaRouter.get('/:id', (req, res) => {
 
