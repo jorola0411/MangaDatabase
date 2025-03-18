@@ -10,7 +10,7 @@ mangaRouter.get("/", (req, res) => {
     FROM manga
     JOIN authors ON manga.author_id=authors.id
     `;
-    db.query(sql, (results, error) => {
+    db.query(sql, (error, results) => {
         if (error) {
             res.status(500).send(error);
             return;
@@ -24,13 +24,13 @@ mangaRouter.get('/:id', (req, res) => {
     const { id } = req.params;
 
     const sql = `
-    SELECT manga.*, authors.name AS author, authors_id AS author_id
+    SELECT manga.*, authors.name AS author, manga.author_id AS author_id
     FROM manga
     JOIN authors ON manga.author_id=authors.id
     WHERE manga.id = ?
     `
 
-    db.query(sql, [id], (results, error) => {
+    db.query(sql, [id], (error, results) => {
 
         if (error) {
             console.log(error)
@@ -49,7 +49,7 @@ mangaRouter.post('/', upload.single('image'), (req, res) =>{
 
     const addMangaSQL = `INSERT INTO albums (name, author, image_name, genres) VALUES (?,?,?,?)`;
 
-    db.query(addMangaSQL, [author, title, image, genre], (results, error) => {
+    db.query(addMangaSQL, [author, title, image, genre], (error, results) => {
 
         if (error) {
             console.error(error);
@@ -81,7 +81,7 @@ mangaRouter.put("/:id", upload.single("image"), (req, res) => {
     updateMangaSQL += `WHERE id=? LIMIT 1`;
     queryParams.push(id);
 
-    db.query(updateMangaSQL, queryParams, (results, error) => {
+    db.query(updateMangaSQL, queryParams, (error, results) => {
 
         if(error) {
 			console.log(error);

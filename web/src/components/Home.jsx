@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown,faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router";
 
 export default function Home() {
 
@@ -73,6 +74,7 @@ export default function Home() {
                                     <h4>{manga.name}</h4>
                                     <p>{manga.author}</p>
                                     <p>{manga.genre}</p>
+                                   <button className="border bg-gray-400"><Link to={`/manga/${manga.id}`}>View</Link></button> 
                                 </list>
                             </div>
                         </>
