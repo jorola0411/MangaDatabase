@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import Filter from "./Filter";
+import DeleteModal from "./DeleteModal";
 export default function Home() {
 
     const [manga, setMangas] = useState([]);
@@ -42,6 +43,7 @@ export default function Home() {
                                     <p>{manga.author}</p>
                                     <p>{manga.genre}</p>
                                    <button className="border bg-gray-400"><Link to={`/manga/${manga.id}`}>View</Link></button> 
+                                   <DeleteModal  onMangaDeleted={fetchManga}  manga={manga} />
                                 
                             </div>
                      
