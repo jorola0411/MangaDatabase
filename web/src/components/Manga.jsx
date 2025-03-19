@@ -1,42 +1,37 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 
 export default function Manga() {
-    const [manga, setMangas] = useState([]);
+    const { id } = useParams();
+    const [mangaData, setMangaData] = useState([]);
+
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/manga/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                setMangaData(data);
+            })
+    }, []);
     
-        const fetchManga = () => {
-            fetch("http://localhost:3000/manga")
-                .then(res => res.json())
-                .then((jsonData) => {
-                    console.log(manga)
-                    setMangas(jsonData);
-                })
-        }
-    
-        useEffect(() => {
-    
-            fetchManga();
-    
-        }, []);
-    {
-        manga.map(manga => {
+
             return (
                 <>
                     <div className="container bg-gray-200 w-90 rounded-lg shadow-lg">
-                        <div key={manga.id}>
+                  
                             <p className="text-left">Manga</p>
                             <list>
-                                <Link to="/"></Link>
-                                <img src={`http://localhost:3000/images/${manga.image_name}`} />
-                                <h4>{manga.name}</h4>
-                                <p>{manga.author}</p>
-                                <p>{manga.genre}</p>
+                            <button className="border bg-gray-400"> <Link to="/">Back</Link></button>
+                                <img src={`http://localhost:3000/images/${mangaData.image_name}`} />
+                                <h4>{mangaData.name}</h4>
+                                <p>{mangaData.author}</p>
+                                <p>{mangaData.genre}</p>
+                                <p>{mangaData.description}</p>
                             </list>
                         </div>
-                    </div>
+                    
                 </>
             )
-        })
-    }
+        
 }

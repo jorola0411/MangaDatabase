@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import Filter from "./Filter";
 import AddModal from "./AddModal";
+import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
 export default function Home() {
 
@@ -9,7 +10,7 @@ export default function Home() {
 
     const fetchManga = async() => {
         fetch("http://localhost:3000/manga")
-            .then(res => res.json())
+            .then(response => response.json())
             .then((jsonData) => {
                 setMangas(jsonData);
             })
@@ -43,6 +44,7 @@ export default function Home() {
                                     <p>{manga.author}</p>
                                     <p>{manga.genre}</p>
                                    <button className="border bg-gray-400"><Link to={`/manga/${manga.id}`}>View</Link></button> 
+                                   <EditModal onMangaUpdated={fetchManga} manga={manga} />
                                    <DeleteModal  onMangaDeleted={fetchManga}  manga={manga} />
                             </div>
                     )

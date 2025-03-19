@@ -45,7 +45,7 @@ mangaRouter.get('/:id', (req, res) => {
     const { id } = req.params;
 
     const sql = `
-    SELECT manga.*, authors.name AS author, manga.author_id AS author_id
+    SELECT manga.*, authors.name AS author, manga.author_id AS author_id, manga.description
     FROM manga
     JOIN authors ON manga.author_id=authors.id
     WHERE manga.id = ?
@@ -85,13 +85,13 @@ mangaRouter.put("/:id", upload.single("image"), (req, res) => {
 
     const { id } = req.params;
 
-    const { author_id, title, genre_id } = req.body;
+    const { author_id, title, genre_id, description } = req.body;
 
     let updateMangaSQL =
     `UPDATE manga
-    SET name = ?, genre_id = ? , author_id = ? `;
+    SET author_id = ?, name = ?, genre_id = ? , description = ? `;
 
-    const queryParams = [author_id, title, genre_id];
+    const queryParams = [author_id, title, genre_id, description];
 
     if (req.file) {
         updateMangaSQL += `, image_name = ? `;
