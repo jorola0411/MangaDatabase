@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import Filter from "./Filter";
+import AddModal from "./AddModal";
 import DeleteModal from "./DeleteModal";
 export default function Home() {
 
@@ -32,6 +33,7 @@ export default function Home() {
                <div className="col-span-3">
                 <div className="flex space-between items-center">
                     <h1 className="text-5xl"> Manga</h1> 
+                    <AddModal onMangaAdded={fetchManga}/>
                 </div>
                 {manga.map(manga => {
                     return (

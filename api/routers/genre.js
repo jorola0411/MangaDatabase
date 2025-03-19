@@ -4,7 +4,7 @@ const db = require("../db");
 
 genreRouter.get("/", (req, res) => {
     const sql = 'SELECT * FROM genres';
-    db.query(sql, (results, error) => {
+    db.query(sql, (error, results) => {
 
         if (error) {
             res.status(500).send(error);
@@ -17,15 +17,15 @@ genreRouter.get("/", (req, res) => {
 
 genreRouter.post('/', (req,res) =>{
 
-    const {new_genre} = req.body;
+    const { genre_name } = req.body;
     const addAuthorSQL = `INSERT INTO genres (name) VALUES (?)`;
-    db.query(addAuthorSQL, [new_genre], (results, error) => {
+    db.query(addAuthorSQL, [genre_name], ( error, results) => {
     
         if (error) {
             console.error(error)
             return res.status(500).send('An error occurred');
         }
-        res.json({ message: 'Genre added successfully', id: results.insertId });
+        res.json({ message: 'Genre added successfully', genre_id: results.insertId });
     });
 });
 

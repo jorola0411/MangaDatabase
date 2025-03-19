@@ -18,44 +18,44 @@ export default function AddModalContent({ onClose, onMangaAdded }) {
     const [newGenre, setNewGenre] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:3000/artists")
-            .then((res) => res.json())
-            .then((data) => {
-                setDbAuthors(data);
-                if (data.length > 0) {
-                    setAuthor(data[0].id);
+        fetch("http://localhost:3000/authors")
+            .then((response) => response.json())
+            .then(responseJSON => {
+                setDbAuthors(responseJSON);
+                if (responseJSON.length > 0) {
+                    setAuthor(responseJSON[0].id);
                 }
             });
     }, [])
 
     useEffect(() => {
         fetch("http://localhost:3000/genres")
-            .then((res) => res.json())
-            .then((data) => {
-                setDbGenres(data);
-                if (data.length > 0) {
-                    setGenre(data[0].id);
+            .then((response) => response.json())
+            .then(responseJSON => {
+                setDbGenres(responseJSON);
+                if (responseJSON.length > 0) {
+                    setGenre(responseJSON[0].id);
                 }
             });
     }, [])
 
-    const HandleAuthorSelectChange = (eventTrigger) => {
-        if (eventTrigger.target.value === "-1") {
+    const HandleAuthorSelectChange = (eventElement) => {
+        if (eventElement.target.value === "-1") {
             setIsNewAuthor(true);
             setAuthor("");
         } else {
             setIsNewAuthor(false);
-            setAuthor(eventTrigger.target.value);
+            setAuthor(eventElement.target.value);
         }
     };
 
-    const HandleGenreSelectChange = (eventTrigger) => {
-        if (eventTrigger.target.value === "-1") {
+    const HandleGenreSelectChange = (eventElement) => {
+        if (eventElement.target.value === "-1") {
             setIsNewGenre(true);
             setGenre("");
         } else {
             setIsNewGenre(false);
-            setGenre(eventTrigger.target.value);
+            setGenre(eventElement.target.value);
         }
     };
 
@@ -63,52 +63,52 @@ export default function AddModalContent({ onClose, onMangaAdded }) {
 
         event.preventDefault();
 
-        let authorId = author;
+        let author_id = author;
 
         if (isNewAuthor) {
 
-            const newAuthorFetchMeta = {
+            const authorResponse = await fetch("http://localhost:3000/authors", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: newAuthor })
-            };
+                body: JSON.stringify({ author_name: newAuthor })
+            });
 
-            fetch("http://localhost:3000/authors", newAuthorFetchMeta)
-                .then((response) => response.json())
-                .then((data) => {
-                    authorId = data.authorId;
-                });
+            const authorData = await authorResponse.json();
+
+            author_id = authorData.author_id;
         }
 
-        let genreId = genre;
+        let genre_id = genre;
 
         if (isNewGenre) {
 
-            const newGenreFetchMeta = {
+
+            const genreResponse = await fetch("http://localhost:3000/genres", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: newGenre })
-            };
+                body: JSON.stringify({ genre_name: newGenre })
+            });
 
-            fetch("http://localhost:3000/genres", newGenreFetchMeta)
-                .then((response) => response.json())
-                .then((data) => {
-                    genreId = data.genreId;
-                });
+            const genreData = await genreResponse.json();
+
+            genre_id = genreData.genre_id;
         }
 
         const formData = new FormData();
-        formData.append("author_id", authorId);
-        formData.append("name", title);
+        formData.append("author_id", author_id);
+        formData.append("title", title);
         formData.append("image", image);
-        formData.append("genre", genreId);
+        formData.append("genre_id", genre_id);
 
-        fetch("http://localhost:3000/manga", { method: "POST", body: formData })
-            .then((response) => response.json())
-            .then(data => {
-                onMangaAdded();
-                onClose();
-            });
+        const mangaAPIRequest = await fetch("http://localhost:3000/manga",{
+            method: "POST",
+            body: formData
+        });
+
+        const mangaResult = await mangaAPIRequest.json();
+
+        onClose();
+        onMangaAdded();
     };
 
     return (

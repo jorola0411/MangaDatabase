@@ -4,7 +4,7 @@ const db = require("../db");
 
 authorRouter.get("/", (req, res) => {
     const sql = 'SELECT * FROM authors';
-    db.query(sql, (results, error) => {
+    db.query(sql, (error, results) => {
 
         if (error) {
             res.status(500).send(error);
@@ -17,15 +17,15 @@ authorRouter.get("/", (req, res) => {
 
 authorRouter.post('/', (req,res) =>{
 
-    const {new_author} = req.body;
+    const {author_name} = req.body;
     const addAuthorSQL = `INSERT INTO authors (name) VALUES (?)`;
-    db.query(addAuthorSQL, [new_author], (results, error) => {
+    db.query(addAuthorSQL, [author_name], (error, results) => {
     
         if (error) {
             console.error(error)
             return res.status(500).send('An error occurred');
         }
-        res.json({ message: 'Author added successfully', id: results.insertId });
+        res.json({ message: 'Author added successfully', author_id: results.insertId });
     });
 });
 

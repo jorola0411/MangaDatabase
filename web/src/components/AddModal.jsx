@@ -8,11 +8,11 @@ export default function AddModal({ onMangaAdded }) {
     
     return (
         <>
-            <button className="border bg-gray-400" onClick={() => { setShowModal(true) }}>Delete</button>
+            <button className="border bg-gray-400" onClick={() => { setShowModal(true) }}>Add</button>
 
             {showModal && createPortal(
                 <AddModalContent
-                    manga={manga}
+                   
                     onMangaAdded={onMangaAdded}
                     onClose={() => { setShowModal(false) }}
                 />,

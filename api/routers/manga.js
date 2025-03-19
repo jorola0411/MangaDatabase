@@ -10,7 +10,7 @@ mangaRouter.get("/", (req, res) => {
     let sql = `
     SELECT manga.*, authors.name AS author, manga.author_id AS author_id, genres.name AS genre, manga.genre_id = genres.id
     FROM manga
-    JOIN authors ON manga.author_id=authors.id
+    JOIN authors ON manga.author_id = authors.id
     JOIN genres ON manga.genre_id = genres.id
     `;
     const conditions = [];
@@ -62,15 +62,15 @@ mangaRouter.get('/:id', (req, res) => {
     });
 });
 
-mangaRouter.post('/', upload.single('image'), (req, res) => {
+mangaRouter.post('/', upload.single('image'),  (req, res) => {
 
-    const { author, title, genre } = req.body;
+    const { author_id, title, genre_id } = req.body;
 
-    const image = req.file.filename;
+    const image_name = req.file.filename;
 
-    const addMangaSQL = `INSERT INTO albums (name, author, image_name, genres) VALUES (?,?,?,?)`;
+    const addMangaSQL = `INSERT INTO manga (author_id, name, genre_id, image_name) VALUES (?, ?, ?, ?)`;
 
-    db.query(addMangaSQL, [author, title, image, genre], (error, results) => {
+    db.query(addMangaSQL, [author_id, title, genre_id, image_name], (error, results) => {
 
         if (error) {
             console.error(error);
@@ -85,13 +85,13 @@ mangaRouter.put("/:id", upload.single("image"), (req, res) => {
 
     const { id } = req.params;
 
-    const { author_id, title, genre } = req.body;
+    const { author_id, title, genre_id } = req.body;
 
     let updateMangaSQL =
     `UPDATE manga
-    SET name = ?, genre = ? , author_id = ? `;
+    SET name = ?, genre_id = ? , author_id = ? `;
 
-    const queryParams = [author_id, title, genre];
+    const queryParams = [author_id, title, genre_id];
 
     if (req.file) {
         updateMangaSQL += `, image_name = ? `;
