@@ -45,9 +45,10 @@ mangaRouter.get('/:id', (req, res) => {
     const { id } = req.params;
 
     const sql = `
-    SELECT manga.*, authors.name AS author, manga.author_id AS author_id, manga.description
+    SELECT manga.*, authors.name AS author, manga.author_id AS author_id, genres.name AS genre, manga.genre_id = genres.id,  manga.description
     FROM manga
     JOIN authors ON manga.author_id=authors.id
+    JOIN genres ON manga.genre_id = genres.id
     WHERE manga.id = ?
     `
 
@@ -64,13 +65,13 @@ mangaRouter.get('/:id', (req, res) => {
 
 mangaRouter.post('/', upload.single('image'),  (req, res) => {
 
-    const { author_id, title, genre_id } = req.body;
+    const { author_id, title, genre_id, description } = req.body;
 
     const image_name = req.file.filename;
 
-    const addMangaSQL = `INSERT INTO manga (author_id, name, genre_id, image_name) VALUES (?, ?, ?, ?)`;
+    const addMangaSQL = `INSERT INTO manga (author_id, name, genre_id, image_name, description) VALUES (?, ?, ?, ?, ?)`;
 
-    db.query(addMangaSQL, [author_id, title, genre_id, image_name], (error, results) => {
+    db.query(addMangaSQL, [author_id, title, genre_id, image_name, description], (error, results) => {
 
         if (error) {
             console.error(error);

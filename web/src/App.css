@@ -4,4 +4,10 @@
   min-height: 100vh;
 }
 
+p,button, input, h1, h2 {
+  font-family: "Raleway", sans-serif;
+}
 
+label {
+  font-family: "Pontano Sans", sans-serif;
+}

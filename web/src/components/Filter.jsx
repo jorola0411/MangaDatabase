@@ -53,9 +53,9 @@ export default function Filter({ updateManga }) {
         <filter className="col-span-1">
             <h1 className="text-left text-5xl pb-10">Filter</h1>
             <form onSubmit={filterSubmit}>
-                <div className="border-b pb-2 max-w-[50%]">
+                <div className="border-b pb-2 max-w-[75%]">
                     <button
-                        className="flex justify-between hover:bg-gray-300 text-2xl"
+                        className="flex justify-between cursor-pointer text-2xl w-full"
                         onClick={() => setOpenGenre(!openGenre)}>
                         Genre
                         <FontAwesomeIcon icon={openGenre ? faChevronUp : faChevronDown} />
@@ -76,8 +76,8 @@ export default function Filter({ updateManga }) {
         </div>
 
 
-                <div className="border-b pb-2 max-w-[50%]">
-                    <button className="flex justify-between hover:bg-gray-300 text-2xl" onClick={() => setOpenAuthor(!openAuthor)}>
+                <div className="border-b pb-2 max-w-[75%]">
+                    <button className="flex justify-between cursor-pointer text-2xl  w-full" onClick={() => setOpenAuthor(!openAuthor)}>
                         Author
                         <FontAwesomeIcon icon={openAuthor ? faChevronUp : faChevronDown} />
                     </button>
@@ -95,7 +95,7 @@ export default function Filter({ updateManga }) {
                         </div>
                     )}
                 </div>
-                <input type="submit" value="Apply" className="mt-4 bg-blue-500 text-white p-2 rounded cursor-pointer" />
+                <input type="submit" value="Apply" className="mt-4 bg-gray-700 text-white p-2 rounded cursor-pointer hover:bg-gray-300 hover:text-black border" />
             </form>
         </filter>
     );

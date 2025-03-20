@@ -8,7 +8,7 @@ export default function DeleteModal({ manga, onMangaDeleted }) {
 
     return (
         <>
-            <button className="border bg-gray-400" onClick={ () => {setShowModal(true) }}>Delete</button>
+            <button className="border bg-gray-800 p-1 text-white hover:bg-red-500 hover:text-black cursor-pointer rounded" onClick={ () => {setShowModal(true) }}>Delete</button>
 
             {showModal && createPortal( 
                 <DeleteModalContent
