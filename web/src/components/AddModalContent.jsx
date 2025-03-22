@@ -208,7 +208,7 @@ export default function AddModalContent({ onClose, onMangaAdded }) {
                         <button type="submit" className="border bg-gray-800 p-1 hover:bg-green-500 text-white text-2xl hover:text-black rounded transition-colors mt-3">Add Manga</button>
                     </div>
                 </form>
-                <button className="text-[2rem] absolute bg-transparent cursor-pointer border-[none] right-2 top-2"
+                <button className="text-[2rem] absolute bg-transparent cursor-pointer border-[none] right-2 top-2 hover:bg-red-500 hover:text-white p-3 transition-colors"
                     onClick={onClose}
                 >x</button>
             </div>

@@ -13,6 +13,11 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
     const [description, setDescription] = useState(manga.description ?? "");
 
 
+    const [isNewAuthor, setIsNewAuthor] = useState(false);
+    const [newAuthor, setNewAuthor] = useState("");
+
+    const [isNewGenre, setIsNewGenre] = useState(false);
+    const [newGenre, setNewGenre] = useState("");
     useEffect(() => {
         fetch("http://localhost:3000/authors")
             .then((response) => response.json())
@@ -35,16 +40,66 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
             });
     }, [])
 
+    const HandleAuthorSelectChange = (eventElement) => {
+        if (eventElement.target.value === "-1") {
+            setIsNewAuthor(true);
+            setAuthor("");
+        } else {
+            setIsNewAuthor(false);
+            setAuthor(eventElement.target.value);
+        }
+    };
+
+    const HandleGenreSelectChange = (eventElement) => {
+        if (eventElement.target.value === "-1") {
+            setIsNewGenre(true);
+            setGenre("");
+        } else {
+            setIsNewGenre(false);
+            setGenre(eventElement.target.value);
+        }
+    };
 
     const handleFormSubmit = async (event) => {
 
         event.preventDefault();
 
+        let author_id = author;
+
+        if (isNewAuthor) {
+
+            const authorResponse = await fetch("http://localhost:3000/authors", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ author_name: newAuthor })
+            });
+
+            const authorData = await authorResponse.json();
+
+            author_id = authorData.author_id;
+        }
+
+        let genre_id = genre;
+
+        if (isNewGenre) {
+
+
+            const genreResponse = await fetch("http://localhost:3000/genres", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ genre_name: newGenre })
+            });
+
+            const genreData = await genreResponse.json();
+
+            genre_id = genreData.genre_id;
+        }
+
         const formData = new FormData();
-        formData.append("author_id", author);
+        formData.append("author_id", author_id);
         formData.append("title", title);
         formData.append("image", image);
-        formData.append("genre_id", genre);
+        formData.append("genre_id", genre_id);
         formData.append("description", description)
 
         const mangaAPIRequest = await fetch(`http://localhost:3000/manga/${manga.id}`, {
@@ -66,17 +121,31 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
                     <div>
                         <label htmlFor="author" className="block font-semibold mb-2">Author</label>
 
-                        <select
-                            name="author"
-                            id="author"
-                            value={author}
-                            onChange={(e) => setAuthor(e.target.value)}
-                            required
-                            className="w-full border rounded p-1">
-                            {dbAuthors && dbAuthors.map((author, index) => (
-                                <option key={author.id} value={author.id}>{author.name}</option>
-                            ))}
-                        </select>
+                        {!isNewAuthor ? (
+                            <select
+                                name="author"
+                                id="author"
+                                value={author}
+                                onChange={HandleAuthorSelectChange}
+                            >
+                                {dbAuthors && dbAuthors.map((author, index) => (
+                                    <option key={author.id} value={author.id}>{author.name}</option>
+                                ))}
+                                <option value="-1">New Author</option>
+                            </select>
+                        ) : (
+                            <>
+                                <input
+                                    type="text"
+                                    name="author"
+                                    id="author"
+                                    value={newAuthor}
+                                    onChange={(e) => setNewAuthor(e.target.value)}
+                                    required
+                                    className=" border rounded p-1 gap-5" />
+                                <button onClick={() => setIsNewAuthor(false)} className=" border rounded p-1">Show List</button>
+                            </>
+                        )}
                     </div>
                     <div>
                         <label htmlFor="title">Title</label>
@@ -84,10 +153,9 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
                             type="text"
                             name="title"
                             id="title"
-                            value={title}
-                            required
                             onChange={(e) => setTitle(e.target.value)}
-                            className="w-full border rounded p-2"/>
+                            required
+                            className="w-full border rounded p-2" />
                     </div>
                     <div>
                         <label htmlFor="description" className="block font-semibold mb-2">Description</label>
@@ -97,21 +165,37 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             className="w-full border rounded p-2 h-24">
-                            </textarea>
+                        </textarea>
                     </div>
                     <div>
                         <label htmlFor="genre" className="block font-semibold mb-2">Genre</label>
-                        <select
-                            name="genre"
-                            id="genre"
-                            value={genre}
-                            onChange={(e) => setGenre(e.target.value)}
-                            className="w-full border rounded p-2">
-                            {dbGenres && dbGenres.map((genre, index) => (
-                                <option key={genre.id} value={genre.id}>{genre.name}</option>
-                            ))}
-                        </select>
+                        {!isNewGenre ? (
+                            <select
+                                name="genre"
+                                id="genre"
+                                value={genre}
+                                onChange={HandleGenreSelectChange}
+                                className="w-full border rounded p-2">
+                                {dbGenres && dbGenres.map((genre, index) => (
+                                    <option key={genre.id} value={genre.id}>{genre.name}</option>
+                                ))}
+                                <option value="-1">New Genre</option>
+                            </select>
+                        ) : (
+                            <>
+                                <input
+                                    type="text"
+                                    name="genre"
+                                    id="genre"
+                                    value={newGenre}
+                                    onChange={(e) => setNewGenre(e.target.value)}
+                                    required
+                                    className=" border rounded p-1 gap-5" />
+                                <button onClick={() => setIsNewGenre(false)} className=" border rounded p-1 gap-5">Show List</button>
+                            </>
+                        )}
                     </div>
+
                     <div>
                         <label htmlFor="image" className="block font-semibold mb-2"> Current Image</label>
 
@@ -121,14 +205,15 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
                         <input type="file"
                             name="image"
                             id="image"
-                            onChange={(e) => setImage(e.target.files[0])} 
-                            className="w-full cursor-pointer"/>
+                            onChange={(e) => setImage(e.target.files[0])}
+                            required
+                            className="cursor-pointer" />
                     </div>
                     <div>
-                        <button type="submit" className="border bg-gray-800 p-1 hover:bg-green-500 text-white text-2xl hover:text-black rounded transition-colors">Save</button>
+                        <button type="submit" className="border bg-gray-800 p-1 hover:bg-green-500 text-white text-2xl hover:text-black rounded transition-colors mt-3">Add Manga</button>
                     </div>
                 </form>
-                <button className="text-2xl absolute bg-transparent cursor-pointer border-[none] right-2 top-2 hover:bg-red-500 hover:text-white p-3 transition-colors"
+                <button className="text-[2rem] absolute bg-transparent cursor-pointer border-[none] right-2 top-2 hover:bg-red-500 hover:text-white p-3 transition-colors"
                     onClick={onClose}
                 >x</button>
             </div>
