@@ -1,16 +1,16 @@
+//this handles deleting the item, and most of the functionality works within the database
 export default function DeleteModalContent ( {manga, onClose, onMangaDeleted}) {
     
-    const deleteManga = (event) => {
+    const deleteManga = (event) => { //deleteManga is a function to handle the process, and we send a delete request to the API to delete the item.
         event.preventDefault();
 
         fetch(`http://localhost:3000/manga/${manga.id}`, {
-            method: "DELETE"
+            method: "DELETE" 
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
-                onMangaDeleted();
-                onClose();
+                onMangaDeleted(); //this refreshes the list after the items been deleted.
+                onClose(); //closes the modal.
             })
 
     }

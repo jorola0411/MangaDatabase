@@ -1,17 +1,19 @@
+//this file is used to show the details of the individual manga.
+
 import React from "react";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router";
 
 export default function Manga() {
-    const { id } = useParams();
-    const [mangaData, setMangaData] = useState([]);
+    const { id } = useParams(); //use params is used to extract the id of the manga from the URL
+    const [mangaData, setMangaData] = useState([]); //usestate is used to store the manga data.
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/manga/${id}`)
-            .then(res => res.json())
+        fetch(`http://localhost:3000/manga/${id}`) //fetch is used to get the API
+            .then(res => res.json()) //res.json parses the response as JSON data
             .then(data => {
-                setMangaData(data);
+                setMangaData(data); //using state, it updates setmangadata with the fetched data.
             })
     }, []);
 

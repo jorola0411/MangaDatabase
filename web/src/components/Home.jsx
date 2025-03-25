@@ -1,14 +1,15 @@
+//Home is the homepage, 
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import Filter from "./Filter";
-import AddModal from "./AddModal";
+import AddModal from "./AddModal"; //many of the modals are imported to be used in the home page.
 import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
 export default function Home() {
 
     const [manga, setMangas] = useState([]);
 
-    const fetchManga = async () => {
+    const fetchManga = async () => { //as explained in manga.jsx, we fetch data from the API to display in the front end 
         fetch("http://localhost:3000/manga")
             .then(response => response.json())
             .then((jsonData) => {
@@ -16,7 +17,7 @@ export default function Home() {
             })
     }
 
-    useEffect(() => {
+    useEffect(() => { //we use useeffect to fetch the manga when the component mounts, using the function above.
 
         fetchManga();
 
@@ -37,9 +38,9 @@ export default function Home() {
                         <AddModal onMangaAdded={fetchManga} />
                     </div>
                     <div className="grid grid-cols-3 gap-5">
-                        {manga.map(manga => {
+                        {manga.map(manga => { // .map is used to extract the manga array and creates a new array from the elements
                             return (
-                                <div key={manga.id}>
+                                <div key={manga.id}> {/*key is used for each manga, and we use .id to get the information in each manga.*/}
                                     <div className="col-span-1 bg-white border">
                                         <img src={`http://localhost:3000/images/${manga.image_name}`} />
                                         <div className="p-2">
@@ -49,8 +50,9 @@ export default function Home() {
                                         
                                             <div className="flex gap-1">
                                                 <button className="border bg-gray-800 p-1 hover:bg-green-500 text-white hover:text-black rounded"><Link to={`/manga/${manga.id}`}>View</Link></button>
-                                                <EditModal onMangaUpdated={fetchManga} manga={manga} />
+                                                <EditModal onMangaUpdated={fetchManga} manga={manga} /> {/* using edit and delete modals as child components, they handle editing the manga details and deleting them*/}
                                                 <DeleteModal onMangaDeleted={fetchManga} manga={manga} />
+                                                
                                             </div>
                                         </div>
                                     </div>

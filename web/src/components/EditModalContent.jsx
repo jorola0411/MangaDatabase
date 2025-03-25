@@ -3,35 +3,35 @@ import React, { useState, useEffect } from "react";
 
 export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
 
-    const [dbAuthors, setDbAuthors] = useState("");
+    const [dbAuthors, setDbAuthors] = useState(""); //as with other files, there is state variables for the author/genre
     const [dbGenres, setDbGenres] = useState("");
 
-    const [author, setAuthor] = useState("");
+    const [author, setAuthor] = useState(""); //these state variables are used for the form inputs
     const [title, setTitle] = useState("");
     const [image, setImage] = useState("");
     const [genre, setGenre] = useState("");
     const [description, setDescription] = useState(manga.description ?? "");
 
 
-    const [isNewAuthor, setIsNewAuthor] = useState(false);
+    const [isNewAuthor, setIsNewAuthor] = useState(false); //isNew author/genre is handled for adding new authors/genres
     const [newAuthor, setNewAuthor] = useState("");
 
     const [isNewGenre, setIsNewGenre] = useState(false);
     const [newGenre, setNewGenre] = useState("");
     useEffect(() => {
-        fetch("http://localhost:3000/authors")
+        fetch("http://localhost:3000/authors") //this use effect is used to update the state with fetched authors
             .then((response) => response.json())
             .then(responseJSON => {
                 setDbAuthors(responseJSON);
                 if (responseJSON.length > 0 && !author) {
-                    setAuthor(responseJSON[0].id);
+                    setAuthor(responseJSON[0].id); //if no author is selected, this defaults the author to an id of 0
                 }
             });
     }, [])
 
     useEffect(() => {
         fetch("http://localhost:3000/genres")
-            .then((response) => response.json())
+            .then((response) => response.json()) //this use effect works the same as the author, but for genres.
             .then(responseJSON => {
                 setDbGenres(responseJSON);
                 if (responseJSON.length > 0 && !genre) {
@@ -40,13 +40,14 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
             });
     }, [])
 
+    //these two functions handle the changes of author/genre in the drop down
     const HandleAuthorSelectChange = (eventElement) => {
-        if (eventElement.target.value === "-1") {
-            setIsNewAuthor(true);
-            setAuthor("");
+        if (eventElement.target.value === "-1") { // -1 is used as an id for new author
+            setIsNewAuthor(true); //this enables the new author input
+            setAuthor("");//this clears the selected author
         } else {
-            setIsNewAuthor(false);
-            setAuthor(eventElement.target.value);
+            setIsNewAuthor(false);//this disables the new author input
+            setAuthor(eventElement.target.value); // this sets the selected author
         }
     };
 
@@ -64,22 +65,22 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
 
         event.preventDefault();
 
-        let author_id = author;
+        let author_id = author; //this intitializes the author with the author ID
 
         if (isNewAuthor) {
 
             const authorResponse = await fetch("http://localhost:3000/authors", {
-                method: "POST",
+                method: "POST", //this is used to establish was request to send, in this case a POST request
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ author_name: newAuthor })
+                body: JSON.stringify({ author_name: newAuthor }) //this sends the new author name to the database as a JSON
             });
 
             const authorData = await authorResponse.json();
 
-            author_id = authorData.author_id;
+            author_id = authorData.author_id; //this gets the new author ID after the response
         }
 
-        let genre_id = genre;
+        let genre_id = genre; //functionally this the genres code works the same as the author code above
 
         if (isNewGenre) {
 
@@ -95,8 +96,8 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
             genre_id = genreData.genre_id;
         }
 
-        const formData = new FormData();
-        formData.append("author_id", author_id);
+        const formData = new FormData(); //this is used for the form to edit the data
+        formData.append("author_id", author_id); //adds author id, title, image, genre id, and description.
         formData.append("title", title);
         formData.append("image", image);
         formData.append("genre_id", genre_id);
@@ -107,9 +108,9 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
             body: formData
         });
 
-        const mangaResult = await mangaAPIRequest.json();
-        onClose();
-        onMangaUpdated();
+        const mangaResult = await mangaAPIRequest.json(); //this parses the entire form into a json format
+        onClose(); //closes the modal
+        onMangaUpdated();//refreshs the manga list in the home page
 
     };
 

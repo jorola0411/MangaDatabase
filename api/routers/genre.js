@@ -1,3 +1,4 @@
+// the genre router is identical code wise to the author router.
 const express = require("express");
 const genreRouter = express.Router();
 const db = require("../db");

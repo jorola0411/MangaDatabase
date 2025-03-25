@@ -1,3 +1,4 @@
+//this file is similar if not identitical to add and edit modal.
 import { useState } from "react"
 import { createPortal } from "react-dom"
 import DeleteModalContent from "./DeleteModalContent";

@@ -1,6 +1,6 @@
-const mysql = require("mysql2");
+const mysql = require("mysql2"); //we use mysql for the server
 
-const db = mysql.createConnection({
+const db = mysql.createConnection({ //this is used to use the details of the server to connect to it.
     user: "root",
     password: 'root',
     database: "manga",
@@ -8,7 +8,7 @@ const db = mysql.createConnection({
     port: "8889"
 });
 
-db.connect( (error) => {
+db.connect( (error) => { //error handling if the user can't connect and handles if the user does connect.
 
     if(error) {
       console.log("Error connecting to database" , error);

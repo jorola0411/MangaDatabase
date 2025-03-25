@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+//the add modal content file is very similar to the edit modal content file.
 
 export default function AddModalContent({ onClose, onMangaAdded }) {
 
