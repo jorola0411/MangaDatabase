@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); //we import
 const app = express();
 const bodyParser = require('body-parser');
 const mangaRouter = require('./routers/manga');
@@ -8,18 +8,14 @@ const genreRouter = require('./routers/genre');
 const cors = require("cors");
 const port = 3000;
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(cors()); //we enable cors for all incoming requests
+app.use(bodyParser.json());// this enables JSON body parsing
+app.use(express.static('public')); //public folder is our static folder
 
-app.use('/manga', mangaRouter);
+app.use('/manga', mangaRouter); //we use the routers established in the router folder
 app.use('/authors', authorsRouter);
 app.use('/genres', genreRouter);
 
-app.get("/", (req, res) => {
-  res.send('hello world');
-});
-
-app.listen(port, () => {
+app.listen(port, () => { //app.listen starts the server.
   console.log(`Manga database listening on port ${port}`)
 });
