@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route, useNavigate } from "react-router"
 import Header from './components/Header';
 import Home from "./components/Home"
 import Manga from "./components/Manga"
@@ -7,7 +8,7 @@ import SignIn from './components/SignIn';
 import authRequired from './authRequired';
 import Login from './components/Login'
 import './App.css'
-import { Routes, Route, useNavigate } from "react-router"
+
 
 const ProtectedHome = authRequired(Home);
 const ProtectedManga = authRequired(Manga);

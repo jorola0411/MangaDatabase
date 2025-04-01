@@ -1,12 +1,18 @@
 //manga router handles the core information of the database, and enables adding, editing, viewing, and deleting manga.
+require('dotenv').config();
 const express = require('express');
 const mangaRouter = express.Router();
 const upload = require('../storage');
 const db = require('../db');
+const authenticateToken = require("../auth.jwt");
+
+mangaRouter.use(authenticateToken);
 
 mangaRouter.get("/", (req, res) => { //this line of code would get all the mangas
     const authorFilters = req.query.authors;  //this gets the author/genre filters if filtered in the front end
     const genreFilters = req.query.genres;
+
+    const user_id = req.user.userId;
 
     let sql = `
     SELECT manga.*, authors.name AS author, manga.author_id AS author_id, genres.name AS genre, manga.genre_id = genres.id
@@ -31,6 +37,8 @@ mangaRouter.get("/", (req, res) => { //this line of code would get all the manga
       if (conditions.length > 0) {
         sql += ' WHERE ' + conditions.join(' AND ');
       }
+      sql += `manga.user_id = ?`;
+      queryParams.push(user_id);
 
     db.query(sql, queryParams, (error, results) => {
         if (error) {
@@ -44,16 +52,17 @@ mangaRouter.get("/", (req, res) => { //this line of code would get all the manga
 mangaRouter.get('/:id', (req, res) => { //this gets the individual manga from the data base
 
     const { id } = req.params;
+    const user_id = req.user.userId;
 
     const sql = {/* this is the sql queries for the database */ } ` 
     SELECT manga.*, authors.name AS author, manga.author_id AS author_id, genres.name AS genre, manga.genre_id = genres.id,  manga.description
     FROM manga
     JOIN authors ON manga.author_id=authors.id
     JOIN genres ON manga.genre_id = genres.id
-    WHERE manga.id = ?
+    WHERE manga.id = ? AND manga.user_id = ?
     `
     
-    db.query(sql, [id], (error, results) => {
+    db.query(sql, [id, user_id], (error, results) => {
 
         if (error) {
             console.log(error)
@@ -67,12 +76,12 @@ mangaRouter.get('/:id', (req, res) => { //this gets the individual manga from th
 mangaRouter.post('/', upload.single('image'),  (req, res) => { //this is the back end code for adding a new manga
 
     const { author_id, title, genre_id, description } = req.body;
-
+    const user_id = req.user.userId;
     const image_name = req.file.filename;
 
-    const addMangaSQL = `INSERT INTO manga (author_id, name, genre_id, image_name, description) VALUES (?, ?, ?, ?, ?)`;
+    const addMangaSQL = `INSERT INTO manga (author_id, name, genre_id, image_name, description, user_id) VALUES (?, ?, ?, ?, ?, ?)`;
 
-    db.query(addMangaSQL, [author_id, title, genre_id, image_name, description], (error, results) => {
+    db.query(addMangaSQL, [author_id, title, genre_id, image_name, description, user_id], (error, results) => {
 
         if (error) {
             console.error(error);
@@ -86,7 +95,7 @@ mangaRouter.post('/', upload.single('image'),  (req, res) => { //this is the bac
 mangaRouter.put("/:id", upload.single("image"), (req, res) => { //this is used to update an existing manga
 
     const { id } = req.params;
-
+    const user_id = req.user.userId;
     const { author_id, title, genre_id, description } = req.body;
 
     let updateMangaSQL =
@@ -100,8 +109,9 @@ mangaRouter.put("/:id", upload.single("image"), (req, res) => { //this is used t
         queryParams.push(req.file.filename);
     }
 
-    updateMangaSQL += `WHERE id=? LIMIT 1`;
+    updateMangaSQL += `WHERE id=? AND user_id = ? LIMIT 1`;
     queryParams.push(id);
+    queryParams.push(user_id);
 
     db.query(updateMangaSQL, queryParams, (error, results) => {
 
@@ -117,9 +127,10 @@ mangaRouter.put("/:id", upload.single("image"), (req, res) => { //this is used t
 mangaRouter.delete("/:id", (req, res) => { //this deleted the manga by ID
 
     const id = req.params.id;
-    const sql = `DELETE FROM manga WHERE id = ? LIMIT 1`
+    const user_id = req.user.userId;
+    const sql = `DELETE FROM manga WHERE id = ? AND user_id = ? LIMIT 1`
 
-    db.query(sql, [id], (error, results) => {
+    db.query(sql, [id, user_id], (error, results) => {
 
         if(error) {
           console.log(error); 

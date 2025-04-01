@@ -104,6 +104,9 @@ export default function EditModalContent({ onClose, onMangaUpdated, manga }) {
         formData.append("description", description)
 
         const mangaAPIRequest = await fetch(`http://localhost:3000/manga/${manga.id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('jwt-token')}`
+            },
             method: "PUT",
             body: formData
         });

@@ -10,7 +10,11 @@ export default function Manga() {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/manga/${id}`) //fetch is used to get the API
+        fetch(`http://localhost:3000/manga/${id}`,{
+            headers: {
+                Authorization: `Bearer ${localStorage.getITem('jwt-token')}`
+            }
+        }) //fetch is used to get the API
             .then(res => res.json()) //res.json parses the response as JSON data
             .then(data => {
                 setMangaData(data); //using state, it updates setmangadata with the fetched data.

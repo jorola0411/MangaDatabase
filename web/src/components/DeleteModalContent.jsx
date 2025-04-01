@@ -5,6 +5,9 @@ export default function DeleteModalContent ( {manga, onClose, onMangaDeleted}) {
         event.preventDefault();
 
         fetch(`http://localhost:3000/manga/${manga.id}`, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('jwt-token')}`
+            },
             method: "DELETE" 
         })
             .then((response) => response.json())

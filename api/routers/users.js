@@ -31,10 +31,10 @@ usersRouter.post("/", [
     db.query(
         "INSERT INTO users (email, password) VALUES (?, ?)",
         [email, hashedPassword], 
-        (err, result) => {
+        (error, result) => {
 
-            if(err) {
-                console.log(err);
+            if(error) {
+                console.log(error);
                 return res.status(500).send();
             }
 

@@ -19,7 +19,13 @@ export default function AddModalContent({ onClose, onMangaAdded }) {
     const [newGenre, setNewGenre] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:3000/authors")
+        const token = localStorage.getItem("token");
+        
+        fetch("http://localhost:3000/authors", {
+            headers:{
+                Authorization: `Bearer ${token}`,
+            }
+        })
             .then((response) => response.json())
             .then(responseJSON => {
                 setDbAuthors(responseJSON);
@@ -104,6 +110,9 @@ export default function AddModalContent({ onClose, onMangaAdded }) {
 
         const mangaAPIRequest = await fetch("http://localhost:3000/manga",{
             method: "POST",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("jwt-token")}`
+              }, 
             body: formData
         });
 

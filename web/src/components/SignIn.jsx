@@ -6,6 +6,8 @@ function SignIn({ handleLogin}) {
         email: "",
         password: ""
     });
+    const navigate = useNavigate();
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         

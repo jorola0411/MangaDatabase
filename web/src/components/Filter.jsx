@@ -45,7 +45,11 @@ export default function Filter({ updateManga }) { //update manga is a prop that 
 
         const queryArtistAndGenre = [queryArtist, queryGenre].filter(Boolean).join("&"); //this line of code combines both the query parameters above
 
-        fetch(`http://localhost:3000/manga?${queryArtistAndGenre}`)
+        fetch(`http://localhost:3000/manga?${queryArtistAndGenre}`,{
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("jwt-token")}`
+            }
+        })
             .then((response) => response.json())
             .then((data) => updateManga(data)); //we fetch the genres/authors only from the api using the function above.
     };

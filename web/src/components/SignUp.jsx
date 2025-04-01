@@ -13,7 +13,11 @@ function SignUp() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
- 
+        if (formData.password.length < 8) {
+            alert("Password must be at least 8 characters long.");
+            return;
+        }
+        
         if (formData.password !== formData.confirmPassword) {
             alert("Passwords do not match!");
             return;
@@ -58,6 +62,7 @@ function SignUp() {
                             id="password"
                             placeholder='Password'
                             name="password"
+                            minLength="8"
                             required
                             onChange={(event) => {
                                 setFormData({ ...formData, password: event.target.value });

@@ -10,7 +10,11 @@ export default function Home() {
     const [manga, setMangas] = useState([]);
 
     const fetchManga = async () => { //as explained in manga.jsx, we fetch data from the API to display in the front end 
-        fetch("http://localhost:3000/manga")
+        fetch("http://localhost:3000/manga",{
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("jwt-token")}`      
+            }
+        })
             .then(response => response.json())
             .then((jsonData) => {
                 setMangas(jsonData);
