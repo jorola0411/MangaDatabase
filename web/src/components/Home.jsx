@@ -25,7 +25,7 @@ export default function Home() {
 
     return (
         <>
-            <header className="bg-gray-800 text-white text-3xl p-4 flex flex-col md:flex-row md:justify-center items-center"> Jao's Manga</header>
+
 
             <div className="grid grid-cols-4 min-h-screen max-w-[1200px] w-full mx-auto my-0 px-4 py-0 mt-10">
 
