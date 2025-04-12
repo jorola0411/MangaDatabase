@@ -10,9 +10,9 @@ export default function Home() {
     const [manga, setMangas] = useState([]);
 
     const fetchManga = async () => { //as explained in manga.jsx, we fetch data from the API to display in the front end 
-        fetch("http://localhost:3000/manga",{
+        fetch("http://localhost:3000/manga", {
             headers: {
-                Authorization: `Bearer ${localStorage.getItem("jwt-token")}`      
+                Authorization: `Bearer ${localStorage.getItem("jwt-token")}`
             }
         })
             .then(response => response.json())
@@ -42,28 +42,30 @@ export default function Home() {
                         <AddModal onMangaAdded={fetchManga} />
                     </div>
                     <div className="grid grid-cols-3 gap-5">
-                        {manga.map(manga => { // .map is used to extract the manga array and creates a new array from the elements
-                            return (
-                                <div key={manga.id}> {/*key is used for each manga, and we use .id to get the information in each manga.*/}
-                                    <div className="col-span-1 bg-white border">
-                                        <img src={`http://localhost:3000/images/${manga.image_name}`} />
-                                        <div className="p-2">
-                                            <h4 className="text-3xl">{manga.name}</h4>
-                                            <p className="text-xl">{manga.author}</p>
-                                            <p className="text-lg">{manga.genre}</p>
-                                        
-                                            <div className="flex gap-1">
-                                                <button className="border bg-gray-800 p-1 hover:bg-green-500 text-white hover:text-black rounded"><Link to={`/manga/${manga.id}`}>View</Link></button>
-                                                <EditModal onMangaUpdated={fetchManga} manga={manga} /> {/* using edit and delete modals as child components, they handle editing the manga details and deleting them*/}
-                                                <DeleteModal onMangaDeleted={fetchManga} manga={manga} />
-                                                
-                                            </div>
-                                        </div>
+                        {Array.isArray(manga) && manga.length > 0 ? (
+                            manga.map(manga => (// .map is used to extract the manga array and creates a new array from the elements
+                        
+                        <div key={manga.id}> {/*key is used for each manga, and we use .id to get the information in each manga.*/}
+                            <div className="col-span-1 bg-white border">
+                                <img src={`http://localhost:3000/images/${manga.image_name}`} />
+                                <div className="p-2">
+                                    <h4 className="text-3xl">{manga.name}</h4>
+                                    <p className="text-xl">{manga.author}</p>
+                                    <p className="text-lg">{manga.genre}</p>
+
+                                    <div className="flex gap-1">
+                                        <button className="border bg-gray-800 p-1 hover:bg-green-500 text-white hover:text-black rounded"><Link to={`/manga/${manga.id}`}>View</Link></button>
+                                        <EditModal onMangaUpdated={fetchManga} manga={manga} /> {/* using edit and delete modals as child components, they handle editing the manga details and deleting them*/}
+                                        <DeleteModal onMangaDeleted={fetchManga} manga={manga} />
+
                                     </div>
                                 </div>
-                            )
-                        })
-                        }
+                            </div>
+                        </div>
+                        ))
+                    ) : (
+                        <p>No manga found.</p>
+                    )}
                     </div>
                 </div>
             </div>

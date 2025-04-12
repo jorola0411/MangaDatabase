@@ -12,7 +12,7 @@ export default function Manga() {
     useEffect(() => {
         fetch(`http://localhost:3000/manga/${id}`,{
             headers: {
-                Authorization: `Bearer ${localStorage.getITem('jwt-token')}`
+                Authorization: `Bearer ${localStorage.getItem('jwt-token')}`
             }
         }) //fetch is used to get the API
             .then(res => res.json()) //res.json parses the response as JSON data
@@ -28,7 +28,7 @@ export default function Manga() {
             <div className="min-h-screen max-w-[1200px] w-full mx-auto  mt-10">
 
 
-                <button className="mt-4 bg-gray-700 text-white p-2 rounded cursor-pointer hover:bg-gray-300 hover:text-black border"> <Link to="/">Back</Link></button>
+                <button className="mt-4 bg-gray-700 text-white p-2 rounded cursor-pointer hover:bg-gray-300 hover:text-black border"> <Link to="/manga">Back</Link></button>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 p-6 rounded-2xl ">
                     <div className="col-span-1 flex justify-center items-start">

@@ -36,12 +36,15 @@ mangaRouter.get("/", (req, res) => { //this line of code would get all the manga
       }
       if (conditions.length > 0) {
         sql += ' WHERE ' + conditions.join(' AND ');
+        sql += ' AND manga.user_id = ?';
+      } else {
+        sql += ' WHERE manga.user_id = ?';
       }
-      sql += `manga.user_id = ?`;
       queryParams.push(user_id);
-
+      
     db.query(sql, queryParams, (error, results) => {
         if (error) {
+            console.log("User making request:", req.user);
             res.status(500).send(error);
             return;
         }
@@ -54,10 +57,10 @@ mangaRouter.get('/:id', (req, res) => { //this gets the individual manga from th
     const { id } = req.params;
     const user_id = req.user.userId;
 
-    const sql = {/* this is the sql queries for the database */ } ` 
+    const sql = ` 
     SELECT manga.*, authors.name AS author, manga.author_id AS author_id, genres.name AS genre, manga.genre_id = genres.id,  manga.description
     FROM manga
-    JOIN authors ON manga.author_id=authors.id
+    JOIN authors ON manga.author_id = authors.id
     JOIN genres ON manga.genre_id = genres.id
     WHERE manga.id = ? AND manga.user_id = ?
     `
