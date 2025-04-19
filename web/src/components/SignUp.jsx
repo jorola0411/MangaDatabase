@@ -5,13 +5,14 @@ function SignUp() {
 
     const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
+    //this tracks the form input values
+    const [formData, setFormData] = useState({ 
         email: "",
         password: "",
         confirmPassword: ""
     });
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault(); //when the handle submit function occues, this prevents the page reloading
 
         if (formData.password.length < 8) {
             alert("Password must be at least 8 characters long.");
@@ -23,7 +24,7 @@ function SignUp() {
             return;
         }
 
- 
+         // This sends POST request to create new user
         fetch("http://localhost:3000/users/", {
             method: "POST",
             headers: {

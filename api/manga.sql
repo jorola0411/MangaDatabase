@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Mar 20, 2025 at 01:22 AM
+-- Generation Time: Apr 19, 2025 at 01:23 AM
 -- Server version: 5.7.24
--- PHP Version: 8.3.1
+-- PHP Version: 8.2.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -75,18 +75,37 @@ CREATE TABLE `manga` (
   `author_id` int(11) NOT NULL,
   `image_name` varchar(255) DEFAULT NULL,
   `genre_id` int(11) NOT NULL,
-  `description` text
+  `description` text,
+  `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `manga`
 --
 
-INSERT INTO `manga` (`id`, `name`, `author_id`, `image_name`, `genre_id`, `description`) VALUES
-(1, 'Bleach', 1, 'bleach-tite-kubo.jpg', 1, 'Bleach is a manga released in 2004.'),
-(2, 'Naruto', 2, 'naruto-masashi-kishimoto.jpg', 1, ''),
-(4, 'Konosuba', 4, 'konosuba-natsume-akatsuki.jpg', 2, ''),
-(5, 'One Piece', 3, 'onepiece-eiichiro-oda.jpg', 1, '');
+INSERT INTO `manga` (`id`, `name`, `author_id`, `image_name`, `genre_id`, `description`, `user_id`) VALUES
+(9, 'one piece', 3, '1745017501419.jpg', 12, 'one piece', 13),
+(10, 'Bleach', 1, '1745017538555.jpg', 12, 'bleach', 14);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `password`) VALUES
+(13, 'test1@test.com', '$2b$10$yvFWXQd3IVmwLQRzDPNI4eiSB/7n8DqM8g5pS5sYexwcaHkEqfdnW'),
+(14, 'test2@test.com', '$2b$10$56W5Z/HzSTJiws0CwXavl.lyhwxOGmxmsByri8pWiifEDBsi3Dx66');
 
 --
 -- Indexes for dumped tables
@@ -112,7 +131,15 @@ ALTER TABLE `genres`
 ALTER TABLE `manga`
   ADD PRIMARY KEY (`id`),
   ADD KEY `author_id` (`author_id`),
-  ADD KEY `genre_id` (`genre_id`) USING BTREE;
+  ADD KEY `genre_id` (`genre_id`) USING BTREE,
+  ADD KEY `manga_ibfk_2` (`user_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -122,19 +149,25 @@ ALTER TABLE `manga`
 -- AUTO_INCREMENT for table `authors`
 --
 ALTER TABLE `authors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `genres`
 --
 ALTER TABLE `genres`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `manga`
 --
 ALTER TABLE `manga`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
@@ -145,7 +178,8 @@ ALTER TABLE `manga`
 --
 ALTER TABLE `manga`
   ADD CONSTRAINT `fk_genres` FOREIGN KEY (`genre_id`) REFERENCES `genres` (`id`),
-  ADD CONSTRAINT `manga_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `authors` (`id`);
+  ADD CONSTRAINT `manga_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `authors` (`id`),
+  ADD CONSTRAINT `manga_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

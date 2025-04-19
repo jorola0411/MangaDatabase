@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Navigate } from "react-router";
 
-
+//this function is used to reroute the user is there is no JWT token.
 const authRequired = (Component) => {
 
 

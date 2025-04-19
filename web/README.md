@@ -1,12 +1,24 @@
-# React + Vite
+Ensure that you have MAMP, and install the node modules via npm install.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MAMP:
+1. Open MAMP
+2. Open the Preferences tab
+3. Change mySQL Port to 8889
+4. Click on "Open webstart page"
+5. When the webstart pages opens, click on tools and click MYPHPADMIN
+6. On the sidebar, click "new"
+7. Create a database called "manga"
+6. In the Manga database, Click "Import" on the navigation bar and import the sql file.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+api folder (backend):
+1. open the terminal 
+2. type "cd api"
+3. type npm install
+4. type npm run dev
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+web folder (frontend):
+1. open the terminal 
+2. type "cd web"
+3. type npm install
+4. type npm run dev

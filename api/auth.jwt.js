@@ -8,7 +8,7 @@ const authenticateToken = (req, res, next) => {
 
     const authHeader = req.headers["authorization"];
 
-    const token = authHeader && authHeader.split(" ")[1];
+    const token = authHeader && authHeader.split(" ")[1]; //This gets token from "Bearer <token>"
 
 
     if(!token) {
@@ -23,7 +23,7 @@ const authenticateToken = (req, res, next) => {
         }
 
         req.user = userData;
-        next();
+        next(); //next is used to continue to the next middleware
 
     })
 

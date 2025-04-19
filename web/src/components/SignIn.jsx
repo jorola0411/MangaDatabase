@@ -10,7 +10,8 @@ function SignIn({ handleLogin}) {
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+    
+         // This sends the login data to server
         fetch("http://localhost:3000/users/sign-in", {
             method: "POST", 
             headers: {
@@ -20,13 +21,20 @@ function SignIn({ handleLogin}) {
         })
         .then( response => response.json() )
         .then( returnedData => {
-
-            localStorage.setItem( "jwt-token", returnedData.jwt);
-
-     
-            handleLogin();
+            if (returnedData.jwt) {
+                localStorage.setItem("jwt-token", returnedData.jwt); //this stores the jwt token for authorization
+                handleLogin();
+            } else {
+                alert("Login failed. Please check your credentials.");
+            }
+        })
+        .catch(err => {
+            alert("There was an error logging in.");
         });
+ 
     }
+    
+
     return (
         <div className="fixed inset-0 bg-[rgba(255,255,255,0.9)] flex justify-center items-center left-0 top-0 z-50;">
             <div className="border shadow-2xl bg-gray-200 max-w-[600px] max-h-[90vh] overflow-y-auto w-full relative p-8">
